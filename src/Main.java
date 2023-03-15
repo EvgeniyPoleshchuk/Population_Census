@@ -15,17 +15,6 @@ public class Main {
                     Education.values()[new Random().nextInt(Education.values().length)])
             );
         }
-        long youngPerson = persons.stream().filter(x -> x.getAge() < 18).count();
-        List<String> lastName = persons.stream().filter(p -> p.getAge() >= 18 && p.getAge() <= 27)
-                .filter(s -> s.getSex().equals(Sex.MAN))
-                .map(Person::getFamily)
-                .toList();
-        List<Person> Worker = persons.stream().filter(s -> s.getSex().equals(Sex.WOMAN) ?
-                        s.getAge() >= 18 && s.getAge() <= 60 : s.getAge() >= 18 && s.getAge() <= 65)
-                .filter(s -> s.getEducation().equals(Education.HIGHER))
-                .sorted(Comparator.comparing(Person::getFamily))
-                .toList();
-
         while (true) {
             System.out.println("""
                     Выберите команду :
@@ -36,9 +25,9 @@ public class Main {
 
             int option = scanner.nextInt();
             switch (option) {
-                case 1 -> System.out.println(youngPerson);
-                case 2 -> lastName.forEach(System.out::println);
-                case 3 -> Worker.forEach(System.out::println);
+                case 1 -> System.out.println(youngPerson(persons));
+                case 2 -> lastName(persons).forEach(System.out::println);
+                case 3 -> Worker(persons).forEach(System.out::println);
                 case 0 -> {
                     return;
                 }
@@ -46,5 +35,24 @@ public class Main {
 
             }
         }
+    }
+
+    public static long youngPerson(Collection<Person> people) {
+        return people.stream().filter(x -> x.getAge() < 18).count();
+    }
+
+    public static List<String> lastName(Collection<Person> people) {
+        return people.stream().filter(p -> p.getAge() >= 18 && p.getAge() <= 27)
+                .filter(s -> s.getSex().equals(Sex.MAN))
+                .map(Person::getFamily)
+                .toList();
+    }
+
+    public static List<Person> Worker(Collection<Person> people) {
+        return people.stream().filter(s -> s.getSex().equals(Sex.WOMAN) ?
+                        s.getAge() >= 18 && s.getAge() <= 60 : s.getAge() >= 18 && s.getAge() <= 65)
+                .filter(s -> s.getEducation().equals(Education.HIGHER))
+                .sorted(Comparator.comparing(Person::getFamily))
+                .toList();
     }
 }
